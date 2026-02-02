@@ -1,0 +1,19 @@
+triggers:
+- description: null
+  envs: []
+  last_enabled_at: 2026-02-01 22:48:48.164032
+  name: customers_trigger
+  pipeline_uuid: qb_customers_backfill
+  schedule_interval: '@once'
+  schedule_type: time
+  settings:
+    skip_if_previous_running: true
+    timeout: ''
+    timeout_status: failed
+  sla: null
+  start_time: 2026-02-02 00:02:00
+  status: active
+  token: 8d670306dd9241858cbf607b6513d7f3
+  variables:
+    fecha_fin: '2025-12-31'
+    fecha_inicio: '2014-01-01'

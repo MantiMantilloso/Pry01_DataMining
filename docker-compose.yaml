@@ -1,0 +1,63 @@
+services:
+  # 1. Base de Datos (Destino RAW)
+  postgres:
+    image: postgres:14
+    container_name: qbo_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgresroot
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=qbo_raw_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data # Cumple requisito de persistencia
+    networks:
+      - qbo_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgresroot -d qbo_raw_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Orquestador (Mage AI)
+  mage:
+    image: mageai/mageai
+    container_name: qbo_mage
+    restart: always
+    ports:
+      - "6789:6789"
+    volumes:
+      - ./mage_data:/home/src # Aquí vivirán tus pipelines (entregable)
+    command: mage start qbo_project # Inicializa un proyecto llamado 'qbo_project'
+    environment:
+      # Configuración de conexión básica (NO poner secretos aquí)
+      - POSTGRES_HOST=postgres
+      - PROJECT_NAME=qbo_project
+    networks:
+      - qbo_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # 3. Visualizador (PgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: qbo_pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8085:80"
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    networks:
+      - qbo_network
+    depends_on:
+      - postgres
+
+# Definición de la red compartida
+networks:
+  qbo_network:
+    driver: bridge

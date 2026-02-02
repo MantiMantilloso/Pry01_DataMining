@@ -1,0 +1,19 @@
+triggers:
+- description: null
+  envs: []
+  last_enabled_at: 2026-02-01 22:49:57.742416
+  name: items_trigger
+  pipeline_uuid: qb_items_backfill
+  schedule_interval: '@once'
+  schedule_type: time
+  settings:
+    skip_if_previous_running: true
+    timeout: ''
+    timeout_status: failed
+  sla: null
+  start_time: 2026-02-02 00:06:00
+  status: active
+  token: 284d31e188e24be28aaef9394c20d316
+  variables:
+    fecha_fin: '2025-12-31'
+    fecha_inicio: '2014-01-01'
